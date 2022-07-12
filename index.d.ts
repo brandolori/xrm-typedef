@@ -48,6 +48,41 @@ declare global {
         setFormNotification: (message: string, level: "ERROR" | "WARNING" | "INFO", uniqueId: string) => void
         close: () => void
         getFormType: () => number
+        tabs: {
+            get: (tabId: string) => Tab
+        }
+    }
+
+    type TabContentType = "cardSections" | "singleComponent"
+    type TabDisplayState = "expanded" | "collapsed"
+
+    type Tab = {
+        sections: {
+            get: (sectionId: string) => Section
+        }
+        getContentType: () => TabContentType
+        getDisplayState: () => TabDisplayState
+        getLabel: () => string
+        getName: () => string
+        getParent: FormContextUi
+        getVisible: () => boolean
+        setLabel: (label: string) => void
+        setVisible: (visible: boolean) => void
+        addTabStateChange: (context: ExecutionContext<void>) => void
+        removeTabStateChange: (context: ExecutionContext<void>) => void
+        setContentType: (type: TabContentType) => void
+        setDisplayState: (type: TabDisplayState) => void
+        setFocus: () => void
+    }
+
+    type Section = {
+        getLabel: () => string
+        getName: () => string
+        getParent: () => Tab
+        getVisible: () => boolean
+        setLabel: (label: string) => void
+        setVisible: (visible: boolean) => void
+
     }
 
     type FormContextDataEntity = {
