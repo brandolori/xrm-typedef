@@ -2,16 +2,23 @@
 export { };
 declare global {
     const Xrm: {
-        Navigation: {
-            openAlertDialog: OpenAlertDialog
-            openConfirmDialog: OpenConfirmDialog
-        }
+        Navigation: Navigation
         WebApi: WebApi
     }
 
+    type Navigation = {
+        openAlertDialog: OpenAlertDialog
+        openConfirmDialog: OpenConfirmDialog
+    }
+
+
     type WebApi = {
         retrieveRecord: (entityLogicalName: string, id: string, options?: string) => Promise<any>
-        retrieveMultipleRecords: (entityLogicalName: string, options?: string, maxPageSize?: number, successCallback?: () => any, errorCallback?: () => any) => Promise<any[]>
+        retrieveMultipleRecords: (entityLogicalName: string,
+            options?: string,
+            maxPageSize?: number,
+            successCallback?: () => any,
+            errorCallback?: () => any) => Promise<any[]>
     }
 
     type AlertStrings = { confirmButtonLabel?: string, text: string, title?: string }
@@ -45,7 +52,10 @@ declare global {
     }
 
     type FormContextUi = {
-        setFormNotification: (message: string, level: "ERROR" | "WARNING" | "INFO", uniqueId: string) => void
+        setFormNotification: (
+            message: string,
+            level: "ERROR" | "WARNING" | "INFO",
+            uniqueId: string) => void
         close: () => void
         getFormType: () => number
         tabs: {
@@ -134,7 +144,13 @@ declare global {
         clearOptions: () => void
         addCustomFilter: (filter: string, entityLogicalName?: string) => void
         addPreSearch: (onPreSearch: () => void) => void
-        addCustomView: (viewId: string, entityName: string, viewDisplayName: string, fetchXml: string, layoutXml: string, isDefault: boolean) => void
+        addCustomView: (
+            viewId: string,
+            entityName: string,
+            viewDisplayName: string,
+            fetchXml: string,
+            layoutXml: string,
+            isDefault: boolean) => void
     }
 
     type XrmNotificationOptions = {
@@ -149,6 +165,8 @@ declare global {
 
     type FormLoadFunction = (context: ExecutionContext<LoadEventArgs>) => void
     type FormSaveFunction = (context: ExecutionContext<SaveEventArgs>) => void
+
+    type GenericCallback = (context: ExecutionContext<void>) => void
 
     type SaveEventArgs = {
         preventDefault: () => void
