@@ -13,12 +13,15 @@ declare global {
 
 
     type WebApi = {
+        createRecord: (entityLogicalName: string, data: any) => Promise<{ entityType: string, id: string }>
         retrieveRecord: (entityLogicalName: string, id: string, options?: string) => Promise<any>
         retrieveMultipleRecords: (entityLogicalName: string,
             options?: string,
             maxPageSize?: number,
             successCallback?: () => any,
             errorCallback?: () => any) => Promise<any[]>
+        updateRecord: (entityLogicalName: string, id: string, data: any) => Promise<{ entityType: string, id: string }>
+        deleteRecord: (entityLogicalName: string, id: string) => Promise<{ entityType: string, id: string, name: string }>
     }
 
     type AlertStrings = { confirmButtonLabel?: string, text: string, title?: string }
@@ -61,6 +64,7 @@ declare global {
         tabs: {
             get: (tabId: string) => Tab
         }
+        refreshRibbon: (refreshAll?: boolean) => void
     }
 
     type TabContentType = "cardSections" | "singleComponent"
@@ -163,11 +167,6 @@ declare global {
         }[]
     }
 
-    type FormLoadFunction = (context: ExecutionContext<LoadEventArgs>) => void
-    type FormSaveFunction = (context: ExecutionContext<SaveEventArgs>) => void
-
-    type GenericCallback = (context: ExecutionContext<void>) => void
-
     type SaveEventArgs = {
         preventDefault: () => void
         getSaveMode: () => number
@@ -176,5 +175,14 @@ declare global {
     type LoadEventArgs = {
         getDataLoadState: () => number
     }
+
+    type FormLoadFunction = (context: ExecutionContext<LoadEventArgs>) => void
+    type FormSaveFunction = (context: ExecutionContext<SaveEventArgs>) => void
+
+    type GenericCallback = (context: ExecutionContext<void>) => void
+
+    type ButtonActionPrimaryControl = (context: FormContext) => void
+    type ButtonEnablePrimaryControl = (context: FormContext) => boolean
+
 
 }
