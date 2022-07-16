@@ -19,7 +19,7 @@ declare global {
             options?: string,
             maxPageSize?: number,
             successCallback?: () => any,
-            errorCallback?: () => any) => Promise<any[]>
+            errorCallback?: () => any) => Promise<{ entities: any[] }>
         updateRecord: (entityLogicalName: string, id: string, data: any) => Promise<{ entityType: string, id: string }>
         deleteRecord: (entityLogicalName: string, id: string) => Promise<{ entityType: string, id: string, name: string }>
     }
