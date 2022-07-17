@@ -9,8 +9,24 @@ declare global {
     type Navigation = {
         openAlertDialog: OpenAlertDialog
         openConfirmDialog: OpenConfirmDialog
+        openForm: (entityFormOptions: EntityFormOptions, formParameters: any) => Promise<{ entityType: string, id: string, name: string }>
     }
 
+    type EntityFormOptions = {
+        entityName: string
+        entityId?: string
+        formId?: string
+        cmdbar?: boolean
+        createFromEntity?: { entityType: string, id: string, name?: string }
+        height?: number
+        width?: number
+        navbar?: "on" | "off" | "entity"
+        openInNewWindow?: boolean
+        windowPosition?: 1 | 2
+        relationship?: { attributeName: string, name: string, navigationPropertyName: string, relationshipType: 0 | 1, roleType: 1 | 2 }
+        selectedStageId?: string
+        useQuickCreateForm?: boolean
+    }
 
     type WebApi = {
         createRecord: (entityLogicalName: string, data: any) => Promise<{ entityType: string, id: string }>
