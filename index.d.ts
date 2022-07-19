@@ -15,7 +15,7 @@ declare global {
     type Navigation = {
         openAlertDialog: OpenAlertDialog
         openConfirmDialog: OpenConfirmDialog
-        openForm: (entityFormOptions: EntityFormOptions, formParameters: any) => Promise<{ entityType: string, id: string, name: string }>
+        openForm: (entityFormOptions: EntityFormOptions, formParameters: any) => Promise<{ savedEntityReference: { entityType: string, id: string, name: string }[] | null }>
     }
 
     type EntityFormOptions = {
