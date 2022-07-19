@@ -4,6 +4,12 @@ declare global {
     const Xrm: {
         Navigation: Navigation
         WebApi: WebApi
+        Utility: Utility
+    }
+
+    type Utility = {
+        showProgressIndicator: (message: string) => void
+        closeProgressIndicator: () => void
     }
 
     type Navigation = {
