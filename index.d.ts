@@ -71,22 +71,82 @@ declare global {
 
     type FormContextData = {
         entity: FormContextDataEntity
+        process: FormContextDataProcess
         getIsDirty: () => boolean
         isValid: () => boolean
         refresh: (save: boolean) => Promise<void>
     }
 
+    type FormContextDataEntity = {
+        getIsDirty: () => boolean
+        getDataXml: () => string
+        getId: () => string
+        addOnSave: (onSave: FormSaveFunction) => void
+        getEntityName: () => string
+        getEntityReference: () => { entityType: string, id: string, name?: string }
+        getPrimaryAttributeValue: () => string
+        isValid: () => string
+        removeOnSave: (onSave: (context: ExecutionContext<void>) => void) => void
+        save: (saveOption: "saveandclose" | "saveandnew") => void
+    }
+
+    type FormContextDataProcess = {
+        addOnPreProcessStatusChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
+        removeOnPreProcessStatusChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
+        addOnProcessStatusChange: (onChange: (context: ExecutionContext<void>) => void) => void
+        removeOnProcessStatusChange: (onChange: (context: ExecutionContext<void>) => void) => void
+        addOnPreStageChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
+        removeOnPreStageChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
+        addOnStageChange: (onChange: (context: ExecutionContext<void>) => void) => void
+        removeOnStageChange: (onChange: (context: ExecutionContext<void>) => void) => void
+        addOnStageSelected: (onSelected: (context: ExecutionContext<void>) => void) => void
+        removeOnStageSelected: (onSelected: (context: ExecutionContext<void>) => void) => void
+
+        getActiveProcess: () => Process
+        setActiveProcess: (processId: string, callbackFunction: (status: "success" | "invalid") => void) => void
+        getEnabledProcesses: (callbackFunction: (processes: any) => void) => void
+
+        moveNext: (callbackFunction: (status: "success" | "crossEntity" | "end" | "invalid" | "dirtyForm" | "stageGate") => void) => void
+        movePrevious: (callbackFunction: (status: "success" | "crossEntity" | "beginning" | "invalid" | "dirtyForm" | "stageGate" | "preventDefault") => void) => void
+    }
+
+    type Process = {
+        getId: () => string
+        getName: () => string
+        getStages: () => Stage
+        isRendered: () => boolean
+    }
+
+    type Stage = {
+        getCategory: () => { getValue: () => number }
+        getEntityName: () => string
+        getId: () => string
+        getName: () => string
+        getNavigationBehavior: () => { allowCreateNew: () => boolean }
+        getStatus: () => "active" | "inactive"
+        getSteps: () => Step[]
+    }
+
+    type Step = {
+        getAttribute: () => string
+        getName: () => string
+        getProgress: () => number
+        isRequired: () => boolean
+        setProgress: (stepProgress: number, message: string) => "invalid" | "success"
+    }
+
     type FormContextUi = {
-        setFormNotification: (
-            message: string,
-            level: "ERROR" | "WARNING" | "INFO",
-            uniqueId: string) => void
+        setFormNotification: (message: string, level: "ERROR" | "WARNING" | "INFO", uniqueId: string) => void
+        clearFormNotification: (id: string) => void
         close: () => void
         getFormType: () => number
-        tabs: {
-            get: (tabId: string) => Tab
-        }
+        tabs: { get: (tabId: string) => Tab }
         refreshRibbon: (refreshAll?: boolean) => void
+        addOnLoad: (onLoad: FormLoadFunction) => void
+        removeOnLoad: (onLoad: FormLoadFunction) => void
+        getViewPortHeight: () => number
+        getViewPortWidth: () => number
+        setFormEntityName: (name: string) => void
     }
 
     type TabContentType = "cardSections" | "singleComponent"
@@ -119,13 +179,6 @@ declare global {
         setLabel: (label: string) => void
         setVisible: (visible: boolean) => void
 
-    }
-
-    type FormContextDataEntity = {
-        getIsDirty: () => boolean
-        getDataXml: () => string
-        getId: () => string
-        getEntityName: () => string
     }
 
     type Option = {
