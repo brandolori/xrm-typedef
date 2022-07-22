@@ -35,7 +35,7 @@ declare global {
     }
 
     type WebApi = {
-        execute: (request: any) => Promise<{ headers: any, ok: boolean, status: number, statusText: string, url: string, json: Promise<any>, text: Promise<string> }>
+        execute: (request: { getMetadata: () => any }) => Promise<{ headers: any, ok: boolean, status: number, statusText: string, url: string, json: Promise<any>, text: Promise<string> }>
         createRecord: (entityLogicalName: string, data: any) => Promise<{ entityType: string, id: string }>
         retrieveRecord: (entityLogicalName: string, id: string, options?: string) => Promise<any>
         retrieveMultipleRecords: (entityLogicalName: string,
