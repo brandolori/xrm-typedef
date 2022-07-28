@@ -76,6 +76,7 @@ declare global {
         getIsDirty: () => boolean
         isValid: () => boolean
         refresh: (save: boolean) => Promise<void>
+        save: (saveOptions?: { saveMode?: number }) => Promise<void>
     }
 
     type FormContextDataEntity = {
