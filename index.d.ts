@@ -37,7 +37,7 @@ declare global {
     type WebApi = {
         execute: (request: { getMetadata: () => any }) => Promise<{ headers: any, ok: boolean, status: number, statusText: string, url: string, json: Promise<any>, text: Promise<string> }>
         createRecord: (entityLogicalName: string, data: any) => Promise<{ entityType: string, id: string }>
-        retrieveRecord: (entityLogicalName: string, id: string, options?: string) => Promise<any>
+        retrieveRecord: (entityLogicalName: string, id: string, options?: string) => Promise<{ [key: string]: any }>
         retrieveMultipleRecords: (entityLogicalName: string,
             options?: string,
             maxPageSize?: number,
@@ -208,6 +208,7 @@ declare global {
         setRequiredLevel: (requirementLevel: RequirementLevel) => void
         getUserPriviledge: () => UserPriviledge
         fireOnChange: () => void
+        getIsDirty: () => boolean
     }
 
     type Control = {
