@@ -213,8 +213,10 @@ declare global {
 
     type Control = {
         getValue: () => string
-        setDisabled: (enabled: boolean) => void
+        /** If set to true, the control will not be editable */
+        setDisabled: (disabled: boolean) => void
         getVisible: () => boolean
+        /** If set to false, the control will not be shown */
         setVisible: (visible: boolean) => void
         setLabel: (label: string) => void
         setFocus: () => void
