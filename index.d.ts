@@ -10,6 +10,7 @@ declare global {
     type Utility = {
         showProgressIndicator: (message: string) => void
         closeProgressIndicator: () => void
+        getGlobalContext: () => GlobalContext
     }
 
     type Navigation = {
@@ -56,6 +57,18 @@ declare global {
 
     type ConfirmDialogResponse = { confirmed: boolean }
     type OpenConfirmDialog = (confirmStrings: ConfirmStrings, confirmOptions?: DialogOptions, successCallback?: () => any, errorCallback?: () => any) => Promise<ConfirmDialogResponse>
+
+    type UserSettings = {
+        roles: {
+            get:() => { id: string, name: string }[]
+        }
+        userId: string
+        userName: string
+    }
+
+    type GlobalContext = {
+        userSettings: UserSettings
+    }
 
     type ExecutionContext<T> = {
         getFormContext: () => FormContext
