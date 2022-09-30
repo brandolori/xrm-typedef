@@ -1,12 +1,15 @@
 // https://docs.microsoft.com/en-us/power-apps/developer/model-driven-apps/clientapi/reference
 export { };
+
+type Override<T, U> = Omit<T, keyof U> & U
+
 declare global {
     const Xrm: {
         Navigation: Navigation
         WebApi: WebApi
         Utility: Utility
         /** @deprecated use formContext instead */
-        Page:any
+        Page: any
     }
 
     type Utility = {
@@ -81,7 +84,7 @@ declare global {
     }
 
     type FormContext<Entity> = {
-        getAttribute: <Field extends keyof Entity> (id: Field) => Attribute<Entity[Field]>
+        getAttribute: <Field extends keyof Entity> (id: Field) => Entity[Field]
         getControl: (id: string) => Control<Entity>
         data: FormContextData
         ui: FormContextUi<Entity>
@@ -92,7 +95,7 @@ declare global {
         process: FormContextDataProcess
         getIsDirty: () => boolean
         isValid: () => boolean
-        refresh: (save: boolean) => Promise<void>
+        refresh: (save?: boolean) => Promise<void>
         save: (saveOptions?: { saveMode?: number }) => Promise<void>
     }
 
@@ -209,24 +212,48 @@ declare global {
 
     type UserPriviledge = { canRead: boolean, canUpdate: boolean, canCreate: boolean }
 
-    type Attribute<T> = {
-        getValue: () => T
-        setValue: (value: T) => void
+    type Attribute = {
+        getValue: () => any
+        setValue: (value: any) => void
         addOnChange: (onChange: (context: ExecutionContext<void, any>) => void) => void
-        controls: Control<T>[]
+        controls: Control<any>[]
         setSubmitMode: (mode: "always" | "never" | "dirty") => void
         getPartyList: () => boolean
         getMax: () => number
         getMin: () => number
         getName: () => string
-        getOption: () => Option
-        getOptions: () => Option[]
         getRequiredLevel: () => RequirementLevel
         setRequiredLevel: (requirementLevel: RequirementLevel) => void
         getUserPriviledge: () => UserPriviledge
         fireOnChange: () => void
         getIsDirty: () => boolean
     }
+
+    type AttributeLookup = Override<Attribute, {
+        getValue: () => [{ id: string }]
+    }>
+
+    type AttributeString = Override<Attribute, {
+        getValue: () => string
+    }>
+
+    type AttributeNumber = Override<Attribute, {
+        getValue: () => number
+    }>
+
+    type AttributeBoolean = Override<Attribute, {
+        getValue: () => boolean
+    }>
+
+    type AttributeDate = Override<Attribute, {
+        getValue: () => boolean
+    }>
+
+    type AttributeOptionSet = Override<Attribute, {
+        getValue: () => number
+        getOption: () => Option
+        getOptions: () => Option[]
+    }>
 
     type Control<T> = {
         getValue: () => string
