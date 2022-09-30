@@ -60,7 +60,7 @@ declare global {
 
     type UserSettings = {
         roles: {
-            get:() => { id: string, name: string }[]
+            get: () => { id: string, name: string }[]
         }
         userId: string
         userName: string
@@ -70,15 +70,15 @@ declare global {
         userSettings: UserSettings
     }
 
-    type ExecutionContext<T> = {
-        getFormContext: () => FormContext
+    type ExecutionContext<T, I> = {
+        getFormContext: () => FormContext<I>
         getEventSource: () => any
         getEventArgs: () => T
     }
 
-    type FormContext = {
-        getAttribute: (id: string) => Attribute
-        getControl: (id: string) => Control
+    type FormContext<Entity> = {
+        getAttribute: <Field extends keyof Entity> (id: Field) => Attribute<Entity[Field]>
+        getControl: (id: string) => Control<Entity>
         data: FormContextData
         ui: FormContextUi
     }
@@ -96,26 +96,26 @@ declare global {
         getIsDirty: () => boolean
         getDataXml: () => string
         getId: () => string
-        addOnSave: (onSave: FormSaveFunction) => void
+        addOnSave: (onSave: ExecutionContext<SaveEventArgs, any>) => void
         getEntityName: () => string
         getEntityReference: () => { entityType: string, id: string, name?: string }
         getPrimaryAttributeValue: () => string
         isValid: () => string
-        removeOnSave: (onSave: (context: ExecutionContext<void>) => void) => void
+        removeOnSave: (onSave: (context: ExecutionContext<SaveEventArgs, any>) => void) => void
         save: (saveOption: "saveandclose" | "saveandnew") => void
     }
 
     type FormContextDataProcess = {
-        addOnPreProcessStatusChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
-        removeOnPreProcessStatusChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
-        addOnProcessStatusChange: (onChange: (context: ExecutionContext<void>) => void) => void
-        removeOnProcessStatusChange: (onChange: (context: ExecutionContext<void>) => void) => void
-        addOnPreStageChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
-        removeOnPreStageChange: (onPreChange: (context: ExecutionContext<void>) => void) => void
-        addOnStageChange: (onChange: (context: ExecutionContext<void>) => void) => void
-        removeOnStageChange: (onChange: (context: ExecutionContext<void>) => void) => void
-        addOnStageSelected: (onSelected: (context: ExecutionContext<void>) => void) => void
-        removeOnStageSelected: (onSelected: (context: ExecutionContext<void>) => void) => void
+        addOnPreProcessStatusChange: (onPreChange: (context: ExecutionContext<void, any>) => void) => void
+        removeOnPreProcessStatusChange: (onPreChange: (context: ExecutionContext<void, any>) => void) => void
+        addOnProcessStatusChange: (onChange: (context: ExecutionContext<void, any>) => void) => void
+        removeOnProcessStatusChange: (onChange: (context: ExecutionContext<void, any>) => void) => void
+        addOnPreStageChange: (onPreChange: (context: ExecutionContext<void, any>) => void) => void
+        removeOnPreStageChange: (onPreChange: (context: ExecutionContext<void, any>) => void) => void
+        addOnStageChange: (onChange: (context: ExecutionContext<void, any>) => void) => void
+        removeOnStageChange: (onChange: (context: ExecutionContext<void, any>) => void) => void
+        addOnStageSelected: (onSelected: (context: ExecutionContext<void, any>) => void) => void
+        removeOnStageSelected: (onSelected: (context: ExecutionContext<void, any>) => void) => void
 
         getActiveProcess: () => Process
         setActiveProcess: (processId: string, callbackFunction: (status: "success" | "invalid") => void) => void
@@ -157,8 +157,8 @@ declare global {
         getFormType: () => number
         tabs: { get: (tabId: string) => Tab }
         refreshRibbon: (refreshAll?: boolean) => void
-        addOnLoad: (onLoad: FormLoadFunction) => void
-        removeOnLoad: (onLoad: FormLoadFunction) => void
+        addOnLoad: (onLoad: ExecutionContext<LoadEventArgs, any>) => void
+        removeOnLoad: (onLoad: ExecutionContext<LoadEventArgs, any>) => void
         getViewPortHeight: () => number
         getViewPortWidth: () => number
         setFormEntityName: (name: string) => void
@@ -179,8 +179,8 @@ declare global {
         getVisible: () => boolean
         setLabel: (label: string) => void
         setVisible: (visible: boolean) => void
-        addTabStateChange: (context: ExecutionContext<void>) => void
-        removeTabStateChange: (context: ExecutionContext<void>) => void
+        addTabStateChange: (context: ExecutionContext<void, any>) => void
+        removeTabStateChange: (context: ExecutionContext<void, any>) => void
         setContentType: (type: TabContentType) => void
         setDisplayState: (type: TabDisplayState) => void
         setFocus: () => void
@@ -205,11 +205,11 @@ declare global {
 
     type UserPriviledge = { canRead: boolean, canUpdate: boolean, canCreate: boolean }
 
-    type Attribute = {
-        getValue: () => any
-        setValue: (value: any) => void
-        addOnChange: (onChange: (context: ExecutionContext<void>) => void) => void
-        controls: Control[]
+    type Attribute<T> = {
+        getValue: () => T
+        setValue: (value: T) => void
+        addOnChange: (onChange: (context: ExecutionContext<void, any>) => void) => void
+        controls: Control<T>[]
         setSubmitMode: (mode: "always" | "never" | "dirty") => void
         getPartyList: () => boolean
         getMax: () => number
@@ -224,7 +224,7 @@ declare global {
         getIsDirty: () => boolean
     }
 
-    type Control = {
+    type Control<T> = {
         getValue: () => string
         /** If set to true, the control will not be editable */
         setDisabled: (disabled: boolean) => void
@@ -268,14 +268,4 @@ declare global {
     type LoadEventArgs = {
         getDataLoadState: () => number
     }
-
-    type FormLoadFunction = (context: ExecutionContext<LoadEventArgs>) => void
-    type FormSaveFunction = (context: ExecutionContext<SaveEventArgs>) => void
-
-    type GenericCallback = (context: ExecutionContext<void>) => void
-
-    type ButtonActionPrimaryControl = (context: FormContext) => void
-    type ButtonEnablePrimaryControl = (context: FormContext) => boolean
-
-
 }
