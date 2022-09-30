@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "lib": [
+      "ESNext"
+    ],
+    "outDir": "dist"
+  }
+}
