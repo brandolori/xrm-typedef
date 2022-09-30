@@ -2,7 +2,8 @@
   "compilerOptions": {
     "checkJs": true,
     "lib": [
-      "ESNext"
+      "ESNext",
+      "DOM"
     ],
     "outDir": "dist"
   }

@@ -5,6 +5,8 @@ declare global {
         Navigation: Navigation
         WebApi: WebApi
         Utility: Utility
+        /** @deprecated use formContext instead */
+        Page:any
     }
 
     type Utility = {
@@ -36,6 +38,7 @@ declare global {
     }
 
     type WebApi = {
+        online: any;
         execute: (request: { getMetadata: () => any }) => Promise<{ headers: any, ok: boolean, status: number, statusText: string, url: string, json: Promise<any>, text: Promise<string> }>
         createRecord: (entityLogicalName: string, data: any) => Promise<{ entityType: string, id: string }>
         retrieveRecord: (entityLogicalName: string, id: string, options?: string) => Promise<{ [key: string]: any }>
@@ -67,6 +70,7 @@ declare global {
     }
 
     type GlobalContext = {
+        client: { getClient: () => "Web" | "Outlook" | "Mobile" };
         userSettings: UserSettings
     }
 
@@ -80,7 +84,7 @@ declare global {
         getAttribute: <Field extends keyof Entity> (id: Field) => Attribute<Entity[Field]>
         getControl: (id: string) => Control<Entity>
         data: FormContextData
-        ui: FormContextUi
+        ui: FormContextUi<Entity>
     }
 
     type FormContextData = {
@@ -150,12 +154,12 @@ declare global {
         setProgress: (stepProgress: number, message: string) => "invalid" | "success"
     }
 
-    type FormContextUi = {
+    type FormContextUi<T> = {
         setFormNotification: (message: string, level: "ERROR" | "WARNING" | "INFO", uniqueId: string) => void
         clearFormNotification: (id: string) => void
         close: () => void
         getFormType: () => number
-        tabs: { get: (tabId: string) => Tab }
+        tabs: { get: (tabId: string) => Tab<T> }
         refreshRibbon: (refreshAll?: boolean) => void
         addOnLoad: (onLoad: ExecutionContext<LoadEventArgs, any>) => void
         removeOnLoad: (onLoad: ExecutionContext<LoadEventArgs, any>) => void
@@ -167,15 +171,15 @@ declare global {
     type TabContentType = "cardSections" | "singleComponent"
     type TabDisplayState = "expanded" | "collapsed"
 
-    type Tab = {
+    type Tab<T> = {
         sections: {
-            get: (sectionId: string) => Section
+            get: (sectionId: string) => Section<T>
         }
         getContentType: () => TabContentType
         getDisplayState: () => TabDisplayState
         getLabel: () => string
         getName: () => string
-        getParent: FormContextUi
+        getParent: FormContextUi<T>
         getVisible: () => boolean
         setLabel: (label: string) => void
         setVisible: (visible: boolean) => void
@@ -186,14 +190,14 @@ declare global {
         setFocus: () => void
     }
 
-    type Section = {
+    type Section<T> = {
+        controls: Control<T>[];
         getLabel: () => string
         getName: () => string
-        getParent: () => Tab
+        getParent: () => Tab<T>
         getVisible: () => boolean
         setLabel: (label: string) => void
         setVisible: (visible: boolean) => void
-
     }
 
     type Option = {
